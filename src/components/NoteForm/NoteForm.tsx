@@ -16,7 +16,8 @@ export const NoteForm: React.FC<NoteFormProps> = ({ onClose }) => {
             .max(50, 'title should not be more than 50 characters')
             .required('title is required'),
         content: Yup.string()
-            .max(500, 'content should not be more than 500 characters'),
+            .max(500, 'content should not be more than 500 characters')
+            .nullable(),
         tag: Yup.string<NoteTag>().required('tag is required'),
     })
 

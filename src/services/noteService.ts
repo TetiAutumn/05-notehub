@@ -8,7 +8,7 @@ export interface FetchNotesResponse {
 
 export interface CreateNoteOptions {
     title: string;
-    content: string;
+    content: string | null;
     tag: NoteTag
 }
 
