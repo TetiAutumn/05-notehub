@@ -4,7 +4,7 @@ export interface Note {
     content: string;
     createdAt: string;
     updatedAt: string;
-    tag: NoteTag;І
+    tag: NoteTag;
 }
 
 export type NoteTag = "Work" | "Personal" | "Meeting" | "Shopping" | "Todo";
