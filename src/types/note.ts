@@ -1,10 +1,10 @@
 export interface Note {
     id: string;
     title: string;
-    content: string | null;
+    content: string;
     createdAt: string;
     updatedAt: string;
-    tag: NoteTag;
+    tag: NoteTag;І
 }
 
 export type NoteTag = "Work" | "Personal" | "Meeting" | "Shopping" | "Todo";
