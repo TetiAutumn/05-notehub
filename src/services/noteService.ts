@@ -13,7 +13,7 @@ export interface createNoteOptions {
 }
 
 const headers = {
-    Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
+    'Authorization': `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
 }
 
 export const fetchNotes = async (search: string = '', page: number = 1) => {
@@ -45,7 +45,7 @@ export const createNote = async ({ title, content, tag }: createNoteOptions) => 
     }
 }
 
-export const deleteNote = async (id:string) => {
+export const deleteNote = async (id:number) => {
     try {
         const response = await axios.delete<Note>(
             `https://notehub-public.goit.study/api/notes/${id}`,

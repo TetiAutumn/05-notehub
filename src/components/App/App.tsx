@@ -1,52 +1,64 @@
-// import toast, { Toaster } from "react-hot-toast";
-// import SearchBar from "../SearchBox/SearchBar";
-import "./App.module.css"
-// import { movieService } from "../../services/movieService";
-// import { useEffect, useState, type ComponentType } from "react";
-// import type { Movie } from "../../types/movie";
-// import { Loader } from "../Pagination/Pagination";
-// import { ErrorMessage } from "../NoteList/NoteList";
-// import { MovieModal } from "../Modal/Modal";
-// import { keepPreviousData, useQuery } from "@tanstack/react-query";
-// import ReactPaginateModule, { type ReactPaginateProps } from "react-paginate";
+import Pagination from "../Pagination/Pagination";
+import SearchBox from "../SearchBox/SearchBox";
+import { useState, type InputEventHandler } from "react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import css from "./App.module.css";
-
-// type ModuleWithDefault<T> = { default: T }
-
-// const ReactPaginate = (ReactPaginateModule as unknown as ModuleWithDefault<ComponentType<ReactPaginateProps>>).default;
+import { fetchNotes } from "../../services/noteService";
+import NoteList from "../NoteList/NoteList";
+import { useDebouncedCallback } from "use-debounce";
+import { Modal } from "../Modal/Modal";
+import { NoteForm } from "../NoteForm/NoteForm";
 
 export default function App() {
-  // const [query, setQuery] = useState("");
-  // const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-  // const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState("");
+  const [isEnabled, setIsEnabled] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [page, setPage] = useState<number>(1);
 
-  // const { data: movies, isLoading, isError } = useQuery({
-  //   queryKey: ["movies", query, page],
-  //   queryFn: () => movieService(query, page),
-  //   enabled: !!query,
-  //   placeholderData: keepPreviousData,
-  // });
+  const { data } = useQuery({
+    queryKey: ["notes", search, page],
+    queryFn: () => fetchNotes(search, page),
+    placeholderData: keepPreviousData,
+    enabled: isEnabled,
+  });
 
-  // const handleSearch = (newQuery: string) => {
-  //   setQuery(newQuery);
-  //   setPage(1);
-  // };
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    setIsEnabled(false);
+    setPage(1);
+    setSearch(value);
+    setIsEnabled(true);
+  }, 500);
 
-  // useEffect(() => {
-  //   if (movies?.results.length === 0 && query && !isLoading) {
-  //     toast("No movies found for your request.")
-  //   }
+  const handleSearch: InputEventHandler<HTMLInputElement> = (event) => {
+    debouncedSearch((event.target as HTMLInputElement).value);
+  };
 
-  // }, [movies?.results.length, isLoading, query]);
+  const handlePage = (page: number) => {
+    setPage(page);
+  }
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
         {/* Компонент SearchBox */}
+        <SearchBox onInput={handleSearch} />
         {/* Пагінація */}
+        <Pagination
+          page={page}
+          totalPages={data?.totalPages || 0}
+          onPageChange={handlePage}
+        />
         {/* Кнопка створення нотатки */}
+        <button className={css.button} onClick={() => setShowModal(true)}>Create note +</button>
       </header>
+      <NoteList notes={data?.notes || []} />
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          <NoteForm onClose={() => setShowModal(false)} />
+        </Modal>
+      )}
     </div>
+
 
   );
 }

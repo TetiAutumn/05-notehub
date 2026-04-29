@@ -1,5 +1,5 @@
 {
-  "name": "03-react-movies",
+  "name": "04-react-notes",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,10 +12,13 @@
   "dependencies": {
     "@tanstack/react-query": "^5.99.2",
     "axios": "^1.14.0",
+    "formik": "^2.4.9",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-hot-toast": "^2.6.0",
-    "react-paginate": "^8.3.0"
+    "react-paginate": "^8.3.0",
+    "use-debounce": "^10.1.1",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
