@@ -6,7 +6,7 @@ export interface FetchNotesResponse {
     totalPages: number;
 }
 
-export interface createNoteOptions {
+export interface CreateNoteOptions {
     title: string;
     content: string;
     tag: NoteTag
@@ -25,14 +25,12 @@ export const fetchNotes = async (search: string = '', page: number = 1): Promise
         return response.data;
     } catch (e) {
         console.log(e);
-        return {
-            notes: [],
-            totalPages: 0,
-        }
+        throw new Error('error to fetch all notes');
+
     }
 }
 
-export const createNote = async ({ title, content, tag }: createNoteOptions): Promise<Note> => {
+export const createNote = async ({ title, content, tag }: CreateNoteOptions): Promise<Note> => {
     try {
         const response = await axios.post<Note>(
             `https://notehub-public.goit.study/api/notes`,
@@ -46,14 +44,7 @@ export const createNote = async ({ title, content, tag }: createNoteOptions): Pr
         return response.data;
     } catch (e) {
         console.log(e);
-        return {
-            id: '',
-            title: '',
-            content: null,
-            createdAt: '',
-            updatedAt: '',
-            tag: 'Todo'
-        }
+        throw new Error('error to create new note');
     }
 }
 
@@ -66,13 +57,6 @@ export const deleteNote = async (id: string): Promise<Note> => {
         return response.data;
     } catch (e) {
         console.log(e);
-        return {
-            id: '',
-            title: '',
-            content: null,
-            createdAt: '',
-            updatedAt: '',
-            tag: 'Todo'
-        }
+        throw new Error('error to delete a note');
     }
 }

@@ -1,6 +1,6 @@
 import css from "./NoteForm.module.css"
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNote, type createNoteOptions } from "../../services/noteService";
+import { createNote, type CreateNoteOptions } from "../../services/noteService";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from "formik";
 import type { NoteTag } from "../../types/note";
@@ -20,7 +20,7 @@ export const NoteForm: React.FC<NoteFormProps> = ({ onClose }) => {
         tag: Yup.string<NoteTag>().required('tag is required'),
     })
 
-    const noteInitialValues: createNoteOptions = {
+    const noteInitialValues: CreateNoteOptions = {
         title: '',
         content: '',
         tag: 'Todo',
@@ -29,19 +29,14 @@ export const NoteForm: React.FC<NoteFormProps> = ({ onClose }) => {
     const queryClient = useQueryClient();
 
     const createNoteMutation = useMutation({
-        mutationFn: (data: createNoteOptions) => createNote(data),
-        onSettled: async (_, error) => {
-            if (error) {
-                console.log(error);
-            } else {
-                await queryClient.invalidateQueries({ queryKey: ["notes"] })
-            }
-        }
+        mutationFn: (data: CreateNoteOptions) => createNote(data),
+
     });
 
-    const handleSubmit = (values: createNoteOptions, actions: FormikHelpers<createNoteOptions>) => {
+    const handleSubmit = (values: CreateNoteOptions, actions: FormikHelpers<CreateNoteOptions>) => {
         createNoteMutation.mutate(values, {
-            onSuccess: () => {
+            onSuccess: async () => {
+                await queryClient.invalidateQueries({ queryKey: ["notes"] })
                 actions.resetForm();
                 onClose();
             },

@@ -12,12 +12,8 @@ export default function NoteList({ notes }: NoteListProps) {
 
   const deleteNoteMutation = useMutation({
     mutationFn: (id: string) => deleteNote(id),
-    onSettled: async (_, error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        await queryClient.invalidateQueries({ queryKey: ["notes"] })
-      }
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["notes"] })
     }
   });
 
