@@ -7,14 +7,13 @@ type ModuleWithDefault<T> = { default: T }
 
 const ReactPaginate = (ReactPaginateModule as unknown as ModuleWithDefault<ComponentType<ReactPaginateProps>>).default;
 
-interface Props {
+interface PaginationProps {
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 }
 
-export default function Pagination({ page, totalPages, onPageChange }: Props) {
-  if (totalPages === 0) return null
+export default function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
   return (
     <ReactPaginate
       pageCount={totalPages}

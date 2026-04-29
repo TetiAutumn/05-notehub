@@ -16,7 +16,7 @@ const headers = {
     'Authorization': `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
 }
 
-export const fetchNotes = async (search: string = '', page: number = 1) => {
+export const fetchNotes = async (search: string = '', page: number = 1): Promise<FetchNotesResponse> => {
     try {
         const response = await axios.get<FetchNotesResponse>(
             `https://notehub-public.goit.study/api/notes?search=${search}&page=${page}`,
@@ -25,10 +25,14 @@ export const fetchNotes = async (search: string = '', page: number = 1) => {
         return response.data;
     } catch (e) {
         console.log(e);
+        return {
+            notes: [],
+            totalPages: 0,
+        }
     }
 }
 
-export const createNote = async ({ title, content, tag }: createNoteOptions) => {
+export const createNote = async ({ title, content, tag }: createNoteOptions): Promise<Note> => {
     try {
         const response = await axios.post<Note>(
             `https://notehub-public.goit.study/api/notes`,
@@ -42,10 +46,18 @@ export const createNote = async ({ title, content, tag }: createNoteOptions) => 
         return response.data;
     } catch (e) {
         console.log(e);
+        return {
+            id: '',
+            title: '',
+            content: null,
+            createdAt: '',
+            updatedAt: '',
+            tag: 'Todo'
+        }
     }
 }
 
-export const deleteNote = async (id:number) => {
+export const deleteNote = async (id: string): Promise<Note> => {
     try {
         const response = await axios.delete<Note>(
             `https://notehub-public.goit.study/api/notes/${id}`,
@@ -54,5 +66,13 @@ export const deleteNote = async (id:number) => {
         return response.data;
     } catch (e) {
         console.log(e);
+        return {
+            id: '',
+            title: '',
+            content: null,
+            createdAt: '',
+            updatedAt: '',
+            tag: 'Todo'
+        }
     }
 }

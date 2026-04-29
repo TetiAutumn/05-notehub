@@ -43,15 +43,19 @@ export default function App() {
         {/* Компонент SearchBox */}
         <SearchBox onInput={handleSearch} />
         {/* Пагінація */}
-        <Pagination
-          page={page}
-          totalPages={data?.totalPages || 0}
-          onPageChange={handlePage}
-        />
+        {data && data.totalPages > 0 && (
+          <Pagination
+            page={page}
+            totalPages={data?.totalPages || 0}
+            onPageChange={handlePage}
+          />
+        )}
         {/* Кнопка створення нотатки */}
         <button className={css.button} onClick={() => setShowModal(true)}>Create note +</button>
       </header>
-      <NoteList notes={data?.notes || []} />
+      {data && data.notes.length > 0 &&
+        <NoteList notes={data?.notes || []} />
+      }
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
           <NoteForm onClose={() => setShowModal(false)} />

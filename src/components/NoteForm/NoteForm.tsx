@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote, type createNoteOptions } from "../../services/noteService";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from "formik";
+import type { NoteTag } from "../../types/note";
 
 interface NoteFormProps {
     onClose: () => void;
@@ -16,7 +17,7 @@ export const NoteForm: React.FC<NoteFormProps> = ({ onClose }) => {
             .required('title is required'),
         content: Yup.string()
             .max(500, 'content should not be more than 500 characters'),
-        tag: Yup.string().required('tag is required'),
+        tag: Yup.string<NoteTag>().required('tag is required'),
     })
 
     const noteInitialValues: createNoteOptions = {
@@ -39,10 +40,12 @@ export const NoteForm: React.FC<NoteFormProps> = ({ onClose }) => {
     });
 
     const handleSubmit = (values: createNoteOptions, actions: FormikHelpers<createNoteOptions>) => {
-        createNoteMutation.mutate(values);
-        console.log('form:', values);
-        actions.resetForm();
-        onClose();
+        createNoteMutation.mutate(values, {
+            onSuccess: () => {
+                actions.resetForm();
+                onClose();
+            },
+        });
     };
 
     return (
